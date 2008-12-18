@@ -8,7 +8,7 @@ Stable tag: 0.1
 == Description ==
 
 The ranking of your posts.
-Visit [Plugin Page](http://jeeker/projects/postrank/ "PostRank") for usage information and project news.
+Visit [Plugin Page](http://jeeker.net/projects/postrank/ "PostRank") for usage information and project news.
 
 == Screenshots ==
 
