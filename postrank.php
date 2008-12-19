@@ -2,9 +2,9 @@
 /*
 Plugin Name: PostRank
 Plugin URI: http://jeeker.net/projects/postrank/
-Description: The ranking of your posts.
+Description: The ranking of your posts. Visit <a href="http://jeeker.net/projects/postrank/">Jeeker</a> for usage information and project news.
 Author: JinnLynn
-Version: 0.1
+Version: 0.1.1
 Author URI: http://jeeker.net/
 */
 
@@ -13,17 +13,16 @@ Author URI: http://jeeker.net/
  *
  * @since 0.1
  */
-define('POSTRANK_VERSION', '0.1');
+define('POSTRANK_VERSION', '0.1.1');
 
 /**
  * JPostRank
  * 
  * 日志排名处理类
  *
- * @todo 自动重新统计
  * @todo 指定时间段、分类排名日志输出，自动变换
  */
-class JPostRank {
+class PostRank {
     /**
      * 默认配置
      *
@@ -103,6 +102,10 @@ class JPostRank {
         add_action('wp_update_comment_count', array(&$this, 'RecordRank'));
         add_action('delete_page', array(&$this, 'DeleteRecord'));
         add_action('delete_post', array(&$this, 'DeleteRecord'));
+        add_filter('cron_schedules', array(&$this, 'AddScheduleRecurrence'));
+        add_action('postrank_weekly_restat_schedule', array(&$this, 'ReStat'));
+        if (!wp_next_scheduled('postrank_weekly_restat_schedule'))
+            wp_schedule_event(time(), 'weekly', 'postrank_weekly_restat_schedule');
         
         if (is_admin())
             wp_enqueue_script('jquery');
@@ -167,6 +170,18 @@ class JPostRank {
             }
         }
         $this->ReStat();
+    }
+    
+    /**
+     * 添加计划周期
+     *
+     * @since 0.1.1
+     * @param array $schedules
+     * @return array
+     */
+    function AddScheduleRecurrence($schedules) {
+        $schedules['weekly'] = array('interval' => 604800, 'display' => __('Once Weekly'));
+        return $schedules;
     }
     
     /**
@@ -957,7 +972,7 @@ class JPostRank {
  * @since 0.1
  * @var object
  */
-global $JPostRank;
+global $PostRank;
 
 /**
  * 激活插件时重新统计
@@ -966,7 +981,7 @@ global $JPostRank;
  * @todo 为什么不能在类内部实现？
  */
 function JPR_Activate() {
-    $active = new JPostRank;
+    $active = new PostRank;
     $active->ReStat();
 }
 register_activation_hook(__FILE__, 'JPR_Activate');
@@ -977,8 +992,8 @@ register_activation_hook(__FILE__, 'JPR_Activate');
  * @since 0.1
  */
 function JPR_Init() {
-    global $JPostRank;
-    $JPostRank = new JPostRank;
+    global $PostRank;
+    $PostRank = new PostRank;
 }
 add_action('plugins_loaded', 'JPR_Init');
 /**
@@ -988,8 +1003,8 @@ add_action('plugins_loaded', 'JPR_Init');
  * @return str
  */
 function JPR_GetRank($post_id) {
-    global $JPostRank;
-    return $JPostRank->GetPostRank($post_id);
+    global $PostRank;
+    return $PostRank->GetPostRank($post_id);
 }
 /**
  * 显示日志排名值
@@ -997,8 +1012,8 @@ function JPR_GetRank($post_id) {
  * @since 0.1
  */
 function JPR_TheRank() {
-    global $JPostRank, $post;
-    $JPostRank->ShowPostRank($post->ID);
+    global $PostRank, $post;
+    $PostRank->ShowPostRank($post->ID);
 }
 
 /**
@@ -1009,8 +1024,8 @@ function JPR_TheRank() {
  * @return null
  */
 function JPR_MostPopular($args = '') {
-    global $JPostRank;
-    $JPostRank->ShowTopRanked($args);
+    global $PostRank;
+    $PostRank->ShowTopRanked($args);
 }
 
 /**
@@ -1020,8 +1035,8 @@ function JPR_MostPopular($args = '') {
  * @return int
  */
 function JPR_GetViews($post_id) {
-    global $JPostRank;
-    return $JPostRank->GetViews($post_id);
+    global $PostRank;
+    return $PostRank->GetViews($post_id);
 }
 
 /**
@@ -1031,8 +1046,8 @@ function JPR_GetViews($post_id) {
  * @param @param str | obj | array $args
  */
 function JPR_TheViews($args = '') {
-    global $JPostRank;
-    $JPostRank->ShowPostViews($args);
+    global $PostRank;
+    $PostRank->ShowPostViews($args);
 }
 
 /**
@@ -1042,7 +1057,7 @@ function JPR_TheViews($args = '') {
  * @param str | obj | array $args
  */
 function JPR_MostViewed($args = '') {
-    global $JPostRank;
-    $JPostRank->ShowMostViewed($args);
+    global $PostRank;
+    $PostRank->ShowMostViewed($args);
 }
 ?>

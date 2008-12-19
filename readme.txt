@@ -3,12 +3,11 @@ Contributors: JinnLynn
 Tags: views,  rank, counter, postviews, post, page
 Requires at least: 2.7
 Tested up to: 2.7
-Stable tag: 0.1
+Stable tag: 0.1.1
 
 == Description ==
 
-The ranking of your posts.
-Visit [Plugin Page](http://jeeker.net/projects/postrank/ "PostRank") for usage information and project news.
+The ranking of your posts. Visit [Plugin Page](http://jeeker.net/projects/postrank/ "PostRank") for usage information and project news.
 
 == Screenshots ==
 
