@@ -2,7 +2,7 @@
 Contributors: JinnLynn
 Tags: views,  rank, counter, postviews, post, page
 Requires at least: 2.7
-Tested up to: 2.7
+Tested up to: 3.4.2
 Stable tag: 0.1.1
 
 == Description ==
